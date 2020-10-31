@@ -17,20 +17,31 @@ using Julia Version 1.5.2
 
 #### small.png - 15x15
 number of nodes: 37
+
 Time to create maze: 0.235685 s
+
 Time to solve maze: 0.094201 s
 
 #### normal.png - 41x41
+
 number of nodes: 325
+
 Time to create maze: 0.233094 s
+
 Time to solve maze: 0.093308 s
 
 #### perfect2k.png - 2001x2001
+
 number of nodes: 716516
+
 Time to create maze: 1.985041 s
+
 Time to solve maze: 148.910746 s
 
 #### perfect4k.png - 4001x4001
+
 number of nodes: 2865504
+
 Time to create maze: 7.673843 s
+
 Time to solve maze: about 48 min
