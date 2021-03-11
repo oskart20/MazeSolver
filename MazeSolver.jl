@@ -141,7 +141,7 @@ function analyse_maze(img)
 			maze_map, a, h, w)
 		maze_map[a[1], a[2]] = neighbors
 	end
-	print("took")
+	print("took ")
 	return maze_map, nodes, Startnode, Endnode
 end
 
@@ -228,6 +228,7 @@ println("analysing maze ... ")
 reshape(maze_map, size(img))
 print("solved maze in ")
 @time result = solve(maze_map, startnode, endnode)
+println("length of the solution: " * string(length(result)))
 
 save(string(split(filepath, ".")[1] * "_solved.png"), colourpath(result, copy(img)))
 println("stored maze at: " * string(split(filepath, ".")[1] * "_solved.png"))
