@@ -17,32 +17,51 @@ run on MacBook Pro 2020 with 2,3 GHz Quad-Core Intel Core i7 and 16 GB RAM
 using Julia Version 1.5.2
 
 #### small.png - 15x15
+
 number of nodes: 37
 
-Time to create maze: 0.235685 s
+length of the solution: 45
 
-Time to solve maze: 0.094201 s
+Time to create and analyse maze: 0.201749 s
+
+Time to solve maze: 0.192410 s
 
 #### normal.png - 41x41
 
 number of nodes: 325
 
-Time to create maze: 0.233094 s
+length of the solution: 309
 
-Time to solve maze: 0.093308 s
+Time to create and analyse maze: 0.194738 s
+
+Time to solve maze: 0.187859 s
 
 #### perfect2k.png - 2001x2001
 
 number of nodes: 716516
 
-Time to create maze: 1.985041 s
+length of the solution: 24669
 
-Time to solve maze: 148.910746 s
+Time to create and analyse maze: 1.794380 s
+
+Time to solve maze: 0.605991 s
 
 #### perfect4k.png - 4001x4001
 
 number of nodes: 2865504
 
-Time to create maze: 7.673843 s
+length of the solution: 62545
 
-Time to solve maze: about 48 min
+Time to create and analyse maze: 7.987348 s
+
+Time to solve maze: 1.861095 s
+
+#### perfect15k.png - 15001x15001
+
+number of nodes: 40309838
+
+length of the solution: 380467
+
+Time to create and analyse maze: 192.270232 s
+
+Time to solve maze: 233.113270 s
