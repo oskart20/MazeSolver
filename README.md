@@ -1,14 +1,15 @@
 # MazeSolver
 ![Maze](https://github.com/oskart20/MazeSolver/blob/main/Examples/solved_example.png?raw=true "Solved maze")
 
-Utilizes a simple breadth-first search algorithmto solve mazes of almost any size, although running time might become an issue.
+Utilizes a simple breadth-first search algorithm to solve mazes of almost any size, although running time might become an issue.
 Takes mazes in form of PNG images in which the start is in the first row and the end is the last row respectively.
-A white pixel acts as a path, a black pixel as wall.
+A white pixel acts as a path, a black pixel as a wall.
 
 Example images taken from https://github.com/mikepound/mazesolving/tree/master/examples.
 
 ## How to run the script:
 To run the script you obvouisly need to have [julia](https://julialang.org/downloads/) already installed.
+The required packages are [DataStructures](https://github.com/JuliaCollections/DataStructures.jl) and [Images](https://github.com/JuliaImages/Images.jl).
 Use `julia mazeScript.jl "<path_to_png-maze>"` to run the script on a maze of your choice.
 The solved maze will be stored under `"<path_to_png-maze>_solved.png"`.
 
