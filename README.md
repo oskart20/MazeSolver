@@ -1,5 +1,5 @@
 # MazeSolver
-![Maze](https://github.com/oskart20/MazeSolver/blob/main/Examples/solved_example.png?raw=true "Solved maze")
+![Maze](https://github.com/oskart20/MazeSolver/blob/main/Examples/normal_solved.png?raw=true "Solved maze")
 
 Utilizes a simple breadth-first search algorithm to solve mazes of almost any size, although running time might become an issue.
 Takes mazes in form of PNG images in which the start is in the first row and the end is the last row respectively.
