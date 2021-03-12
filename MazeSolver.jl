@@ -4,6 +4,7 @@ module MazeSolver
 #Pkg.add("Images")
 using Images
 using DataStructures
+using BenchmarkTools
 
 function getstart(img, h, w)
 	for j = 1:w
@@ -46,7 +47,7 @@ function checkChar(char, array)
 end
 
 function getNeighbors(links, maze_map, index, h, w)
-	neighbors::Array{Tuple{Int64,Int64},1} = []
+	neighbors = Array{Tuple{Int, Int}, 1}()
 	if checkChar('N', links)
 		offset = 0
 		while index[1] - (1 * (offset + 1)) > 0
@@ -99,54 +100,50 @@ function getNeighbors(links, maze_map, index, h, w)
 end
 
 function analyse_maze(img)
-	maze_map = Any[]
 	h, w = size(img)
+	maze_map = Matrix{Union{UInt8, Bool, Array{Tuple{Int, Int}, 1}}}(undef, h, w)
 	Startnode = getstart(img, h, w)
 	Endnode = getend(img, h, w)
 	counter = 0
 	for j in CartesianIndices(img)
 		if img[j].r <= 0.5
-			push!(maze_map, false)
+			maze_map[j] = false
 		elseif img[j].r > 0.5
-			push!(maze_map, true)
+			maze_map[j] = true
 			counter += 1
 		end
 	end
+	println("	number of path tiles: " * string(counter))
 	maze_map = reshape(maze_map, (h, w))
-	maze_map[Startnode[1], Startnode[2]] = 5
-	maze_map[Endnode[1], Endnode[2]] = 6
+	maze_map[Startnode[1], Startnode[2]] = UInt8(5)
+	maze_map[Endnode[1], Endnode[2]] = UInt8(6)
+	nodes = [Startnode, Endnode]
 	for i in CartesianIndices((2:h-1, 2:w-1))
 		if maze_map[i[1], i[2]] != false
 			num, neighbors = checkNeighbors(maze_map, (i[1], i[2]), h, w)
-			if neighbors == ['N', 'S'] || neighbors == ['E', 'W']
+			if length(neighbors) == 2 && (('N' in neighbors && 'S' in neighbors)
+					|| ('E' in neighbors && 'W' in neighbors))
 				maze_map[i[1], i[2]] = true
 			elseif num >= 1
-				maze_map[i[1], i[2]] = num + 1
+				maze_map[i[1], i[2]] = UInt8(num + 1)
+				push!(nodes, ((i[1], i[2])))
 			elseif num == 0
 				maze_map[i[1], i[2]] = false
 			end
 		end
 	end
-	println("	number of path tiles: " * string(counter))
-	nodes = []
-	for k in CartesianIndices(maze_map)
-		if maze_map[k[1], k[2]] >= 2
-			push!(nodes, (k[1], k[2]))
-		end
-	end
-	println("	number of nodes :" * string(length(nodes)))
-	dict = Dict{String,Array{Tuple{Int64,Int64},1}}()
+	println("	number of nodes: " * string(length(nodes)))
 	for a in nodes
 		neighbors = getNeighbors(checkNeighbors(maze_map, a, h, w)[2],
 			maze_map, a, h, w)
 		maze_map[a[1], a[2]] = neighbors
 	end
-	print("took ")
+	print("	took ")
 	return maze_map, nodes, Startnode, Endnode
 end
 
 function unfoldpath(lastnode, startnode, maze)
-	path = Array{Tuple{Int64,Int64},1}()
+	path = Array{Tuple{Int, Int}, 1}()
 	current = lastnode
 	while current != startnode
 		if ((current[1] - maze[current][1]) == 0)
@@ -179,12 +176,12 @@ function unfoldpath(lastnode, startnode, maze)
 	return path
 end
 
-function solve(maze_map, startnode::Tuple{Int64,Int64},
-			endnode::Tuple{Int64,Int64})
-	dict = Dict{Tuple{Int64,Int64},Tuple{Int64,Int64}}()
-	visited = Set{Tuple{Int64,Int64}}()
+function solve(maze_map, startnode::Tuple{Int, Int},
+			endnode::Tuple{Int, Int})
+	dict = Dict{Tuple{Int, Int},Tuple{Int, Int}}()
+	visited = Set{Tuple{Int, Int}}()
 	push!(visited, startnode)
-	q = Queue{Tuple{Int64,Int64}}()
+	q = Queue{Tuple{Int, Int}}()
 	dict[startnode] = startnode
 	enqueue!(q, startnode)
 	while !isempty(q)
