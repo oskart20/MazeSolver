@@ -23,9 +23,9 @@ number of nodes: 37
 
 length of the solution: 45
 
-Time to create and analyse maze: 0.201749 s
+Time to create and analyse maze: 0.154597 s
 
-Time to solve maze: 0.192410 s
+Time to solve maze: 0.214058 s
 
 #### normal.png - 41x41
 
@@ -33,9 +33,9 @@ number of nodes: 325
 
 length of the solution: 309
 
-Time to create and analyse maze: 0.194738 s
+Time to create and analyse maze: 0.155865 s
 
-Time to solve maze: 0.187859 s
+Time to solve maze: 0.220333 s
 
 #### perfect2k.png - 2001x2001
 
@@ -43,9 +43,9 @@ number of nodes: 716516
 
 length of the solution: 24669
 
-Time to create and analyse maze: 1.794380 s
+Time to create and analyse maze: 0.786624 s
 
-Time to solve maze: 0.605991 s
+Time to solve maze: 0.556505 s
 
 #### perfect4k.png - 4001x4001
 
@@ -53,9 +53,9 @@ number of nodes: 2865504
 
 length of the solution: 62545
 
-Time to create and analyse maze: 7.987348 s
+Time to create and analyse maze: 2.788537 s
 
-Time to solve maze: 1.861095 s
+Time to solve maze: 1.598567 s
 
 #### perfect15k.png - 15001x15001
 
@@ -63,6 +63,6 @@ number of nodes: 40309838
 
 length of the solution: 380467
 
-Time to create and analyse maze: 192.270232 s
+Time to create and analyse maze: 82.092302 s
 
-Time to solve maze: 233.113270 s
+Time to solve maze: 108.000770 s
