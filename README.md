@@ -1,20 +1,21 @@
 # MazeSolver
 ![Maze](https://github.com/oskart20/MazeSolver/blob/main/Examples/solved_example.png?raw=true "Solved maze")
 
-Utilizes a simple breadth-first search algorithm to solve mazes of almost any size, although running time might become an issue.
+Utilizes the simple breadth-first search algorithm or the a-star search algorithm (for the optimal path) to solve mazes of almost any size, although running time might become an issue.
 Takes mazes in form of PNG images in which the start is in the first row and the end is the last row respectively.
-A white pixel acts as a path, a black pixel as a wall.
+A white pixel symbolises a path, a black pixel a wall.
 
 Example images taken from https://github.com/mikepound/mazesolving/tree/master/examples.
 
 ## How to run the script:
 To run the script you obvouisly need to have [julia](https://julialang.org/downloads/) already installed.
 The required packages are [DataStructures](https://github.com/JuliaCollections/DataStructures.jl) and [Images](https://github.com/JuliaImages/Images.jl).
-Use `julia mazeScript.jl "<path_to_png-maze>"` to run the script on a maze of your choice.
+Use `julia MazeSolver.jl "<path_to_png-maze>"` to run the script using breadth-first search.
+Use `julia MazeSolver.jl "<path_to_png-maze>" true` to run the script using a-star search.
 The solved maze will be stored under `"<path_to_png-maze>_solved.png"`.
 
 ## Rough benchmarks:
-run on MacBook Pro 2020 with 2,3 GHz Quad-Core Intel Core i7 and 16 GB RAM
+breadth-first search run on MacBook Pro 2020 with 2,3 GHz Quad-Core Intel Core i7 and 16 GB RAM
 using Julia Version 1.5.2
 
 #### small.png - 15x15
