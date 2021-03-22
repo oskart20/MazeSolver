@@ -49,49 +49,49 @@ end
 function getNeighbors(links, maze_map, index, h, w)
 	neighbors = Array{Tuple{Int, Int}, 1}()
 	if checkChar('N', links)
-		offset = 0
-		while index[1] - (1 * (offset + 1)) > 0
-			if maze_map[index[1]-(1*(offset+1)), index[2]] isa Bool &&
-					maze_map[index[1]-(1*(offset+1)), index[2]]
+		offset = 1
+		while index[1] - offset > 0
+			if maze_map[index[1] - offset, index[2]] isa Bool &&
+					maze_map[index[1] - offset, index[2]]
 				offset += 1
-			elseif !(maze_map[index[1]-(1*(offset+1)), index[2]] isa Bool)
-				push!(neighbors, (index[1] - (1 * (offset + 1)), index[2]))
+			else
+				push!(neighbors, (index[1] - offset, index[2]))
 				break
 			end
 		end
 	end
 	if checkChar('E', links)
-		offset = 0
-		while index[2] + (1 * (offset + 1)) <= w
-			if maze_map[index[1], index[2]+(1*(offset+1))] isa Bool &&
-					maze_map[index[1], index[2]+(1*(offset+1))]
+		offset = 1
+		while index[2] + offset <= w
+			if maze_map[index[1], index[2] + offset] isa Bool &&
+					maze_map[index[1], index[2] + offset]
 				offset += 1
-			elseif !(maze_map[index[1], index[2]+(1*(offset+1))] isa Bool)
-				push!(neighbors, (index[1], index[2] + (1 * (offset + 1))))
+			else
+				push!(neighbors, (index[1], index[2] + offset))
 				break
 			end
 		end
 	end
 	if checkChar('S', links)
-		offset = 0
-		while index[1] + (1 * (offset + 1)) <= h
-			if maze_map[index[1]+(1*(offset+1)), index[2]] isa Bool &&
-					maze_map[index[1]+(1*(offset+1)), index[2]]
+		offset = 1
+		while index[1] + offset <= h
+			if maze_map[index[1] + offset, index[2]] isa Bool &&
+					maze_map[index[1] + offset, index[2]]
 				offset += 1
-			elseif !(maze_map[index[1]+(1*(offset+1)), index[2]] isa Bool)
-				push!(neighbors, (index[1] + (1 * (offset + 1)), index[2]))
+			else
+				push!(neighbors, (index[1] + offset, index[2]))
 				break
 			end
 		end
 	end
 	if checkChar('W', links)
-		offset = 0
-		while index[2] - (1 * (offset + 1)) > 0
-			if maze_map[index[1], index[2]-(1*(offset+1))] isa Bool &&
-					maze_map[index[1], index[2]-(1*(offset+1))]
+		offset = 1
+		while index[2] - offset > 0
+			if maze_map[index[1], index[2] - offset] isa Bool &&
+					maze_map[index[1], index[2] - offset]
 				offset += 1
-			elseif !(maze_map[index[1], index[2]-(1*(offset+1))] isa Bool)
-				push!(neighbors, (index[1], index[2] - (1 * (offset + 1))))
+			else
+				push!(neighbors, (index[1], index[2] - offset))
 				break
 			end
 		end
@@ -122,7 +122,7 @@ function analyse_maze(img)
 		if maze_map[i[1], i[2]] != false
 			num, neighbors = checkNeighbors(maze_map, (i[1], i[2]), h, w)
 			if length(neighbors) == 2 && (('N' in neighbors && 'S' in neighbors)
-					|| ('E' in neighbors && 'W' in neighbors))
+				|| ('E' in neighbors && 'W' in neighbors))
 				maze_map[i[1], i[2]] = true
 			elseif num >= 1
 				maze_map[i[1], i[2]] = UInt8(num + 1)
@@ -140,6 +140,72 @@ function analyse_maze(img)
 	end
 	print("	took ")
 	return maze_map, nodes, Startnode, Endnode
+end
+
+function a_star(maze_map, startnode::Tuple{Int, Int}, endnode::Tuple{Int, Int})
+	costs = Dict{Tuple{Int, Int}, Int}()
+	dict = Dict{Tuple{Int, Int},Tuple{Int, Int}}()
+	openlist = PriorityQueue{Tuple{Int, Int}, Int}()
+	closedlist = Set{Tuple{Int, Int}}()
+
+	costs[startnode] = 0
+	enqueue!(openlist, startnode, 0)
+
+	while !(isempty(openlist))
+		current = dequeue!(openlist)
+		if current == endnode
+			return unfoldpath(endnode, startnode, dict)
+		end
+		push!(closedlist, current)
+		for edge in maze_map[current[1], current[2]]
+			if !(edge in closedlist)
+				tentative_g = costs[current] + cost(edge, current)
+				if edge in keys(openlist) && tentative_g >= costs[edge]
+					continue
+				end
+				dict[edge] = current
+				costs[edge] = tentative_g
+
+				f = tentative_g + heuristic(edge, endnode)
+				if edge in keys(openlist)
+					openlist[edge] = f
+				else
+					enqueue!(openlist, edge, f)
+				end
+			end
+		end
+	end
+end
+
+function cost(a, b)
+	return abs(b[1] - a[1]) + abs(b[2] - a[2])
+end
+
+function heuristic(a, b)
+	return floor(hypot((b[2] - a[2]), (b[1] - a[1])))
+end
+
+function bfs(maze_map, startnode::Tuple{Int, Int},
+			endnode::Tuple{Int, Int})
+	dict = Dict{Tuple{Int, Int},Tuple{Int, Int}}()
+	visited = Set{Tuple{Int, Int}}()
+	push!(visited, startnode)
+	q = Queue{Tuple{Int, Int}}()
+	dict[startnode] = startnode
+	enqueue!(q, startnode)
+	while !isempty(q)
+		vertex = dequeue!(q)
+		if vertex == endnode
+			return unfoldpath(endnode, startnode, dict)
+		end
+		for edge in maze_map[vertex[1], vertex[2]]
+			if !(edge in visited)
+				dict[edge] = vertex
+				push!(visited, edge)
+				enqueue!(q, edge)
+			end
+		end
+	end
 end
 
 function unfoldpath(lastnode, startnode, maze)
@@ -176,29 +242,6 @@ function unfoldpath(lastnode, startnode, maze)
 	return path
 end
 
-function solve(maze_map, startnode::Tuple{Int, Int},
-			endnode::Tuple{Int, Int})
-	dict = Dict{Tuple{Int, Int},Tuple{Int, Int}}()
-	visited = Set{Tuple{Int, Int}}()
-	push!(visited, startnode)
-	q = Queue{Tuple{Int, Int}}()
-	dict[startnode] = startnode
-	enqueue!(q, startnode)
-	while !isempty(q)
-		vertex = dequeue!(q)
-		if vertex == endnode
-			return unfoldpath(endnode, startnode, dict)
-		end
-		for edge in maze_map[vertex[1], vertex[2]]
-			if !(edge in visited)
-				dict[edge] = vertex
-				push!(visited, edge)
-				enqueue!(q, edge)
-			end
-		end
-	end
-end
-
 function colourpath(path, painted)
 	number = 1
 	for l in result
@@ -212,7 +255,7 @@ end
 
 if (isfile(ARGS[1]))
 	filepath = ARGS[1]
-	println(filepath)
+	(length(ARGS) == 2 && ARGS[2] == "true") ? weighted = true : weighted = false
 else
 	println("couldn't load " * string(ARGS[1]))
 	exit()
@@ -223,8 +266,8 @@ img = RGB.(load(filepath))
 println("analysing maze ... ")
 @time maze_map, nodes, startnode, endnode = analyse_maze(img)
 reshape(maze_map, size(img))
-print("solved maze in ")
-@time result = solve(maze_map, startnode, endnode)
+print(weighted ? "solved maze for shortest path in " : "solved maze in ")
+@time result = weighted ? a_star(maze_map, startnode, endnode) : bfs(maze_map, startnode, endnode)
 println("length of the solution: " * string(length(result)))
 
 save(string(split(filepath, ".")[1] * "_solved.png"), colourpath(result, copy(img)))
